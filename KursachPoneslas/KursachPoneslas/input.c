@@ -133,27 +133,39 @@ int DelPos(Queue *queue, int pos){
 		int count = 0;
 		ELEMENT *tmp = (ELEMENT*)malloc(sizeof(ELEMENT));
 		while (!isQueueEmpty(queue)){
-		
 			takeFromQueue(queue, tmp);
 			show(tmp, count);
 			_getch();
 			if (count == pos-1) {
-				ELEMENT *delet = tmp;
-				tmp = tmp->next;
+				ELEMENT *delet = queue->head;
+				queue->head = delet->next;
+				free(delet);
+				//continue;
+			}
+			if (count == id-1) {
+				ELEMENT *delet = queue->head;
+				queue->head = NULL;
+				queue->tail = NULL;
 				free(delet);
 				id--;
-				continue;
 			}
 			putToQueue(bufqueue, tmp->val);
 			count++;
 			//free(tmp);
 		}
 		while (!isQueueEmpty(bufqueue)) {
+			printf(" 2221 ");
+			_getch();
 			takeFromQueue(bufqueue, tmp);
+			show(tmp, 0);
 			putToQueue(queue, tmp->val);
+			outTablePhone(queue);
+			_getch();
+			//saveBinFile(queue);
 		}
+		return 1;
 	}
-	return 1;
+	
 }
 
 void show(ELEMENT *tmp, int i){
