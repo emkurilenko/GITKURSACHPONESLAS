@@ -26,12 +26,11 @@ typedef struct {
 }Queue;
 
 
-void putToQueue(Queue *, PHONE);//добавление в очередь
-int takeFromQueue(Queue *, ELEMENT *);//взятие из очереди
+void putToQueue(Queue *, PHONE);//добавить элемент в очередь
+int takeFromQueue(Queue *, ELEMENT *);//взять из очереди
 Queue *CreateQueue(Queue*);//Создание очереди
 int ClearQueue(Queue *);//Удаление очереди
 int isQueueEmpty(Queue *q);//Проверка существования
-void AddHead(Queue *,PHONE); //Добавление в начало очереди
 int InsertPos(Queue *);//Вставка в позицию
 
 #endif

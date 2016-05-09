@@ -130,7 +130,6 @@ void outTablePhone(Queue *queue){
 	putToQueue(queue, val.val);
 	}
 	printf("+===+==========+=============+==============+=============+=============+===========================+===============+\n");
-	return;
 }
 
 int search(Queue *temp, int k){
@@ -154,8 +153,6 @@ int search(Queue *temp, int k){
 	CreateQueue(bufqueue);
 	ELEMENT tmp;
 	while (!isQueueEmpty(temp)){
-		//ELEMENT *tmp = bufqueue->head;
-		
 		takeFromQueue(temp, &tmp);
 		if (k == 0) {
 			strcpy(buf, tmp.val.name);
@@ -170,8 +167,7 @@ int search(Queue *temp, int k){
 			strcpy(buf, tmp.val.skype);
 		}
 		if (strstr(buf, str) != 0) {
-			//if (strcmp(buf,str)==0){
-			
+		
 			if (i == 1) {
 				printf("+===+==========+=============+==============+=============+=============+===========================+===============+\n");
 				printf("| ID|   NAME   |   Surname   |     Phone    |    HPhone   |     City    |           E-mail          |     Skype     |\n");
@@ -224,7 +220,7 @@ void InputPhone(PHONE *newPhone){
 	free(str);
 }
 
-void InputName(PHONE *val){
+void InputName(PHONE *val) {
 	int num = 0;
 	char *str;
 	str = (char*)calloc(40, sizeof(char));
@@ -238,26 +234,26 @@ void InputName(PHONE *val){
 	gets(val->name);
 	str = val->name;
 	num = strlen(str);
-	if (!isupper(str[0])){
+	if (!isupper(str[0])) {
 		str[0] = toupper(str[0]);
 	}
-	if (strlen(val->name) == 0){
+	if (strlen(val->name) == 0) {
 		printf("An empty string.");
 		_getch();
 		InputName(val);
 	}
-	if (strlen(val->name) > 20){
+	if (strlen(val->name) > 20) {
 		printf("\t\t\tThe number of characters exceeds the limit.");
 		_getch();
 		InputName(val);
 	}
-	if (strcmp(str, str1) == 0){
+	if (strcmp(str, str1) == 0) {
 		system("cls");
 		menu();
 	}
 	fflush(stdin);
-	for (int i = 0; i < num; i++){
-		if (!isalnum(str[i]) || !isalpha(str[i])){
+	for (int i = 0; i < num; i++) {
+		if (!isalnum(str[i]) || !isalpha(str[i])) {
 			printf("Enter again!");
 			_getch();
 			InputName(val);
@@ -265,7 +261,7 @@ void InputName(PHONE *val){
 	}
 }
 
-void InputSurname(PHONE *val){
+void InputSurname(PHONE *val) {
 	int num = 0;
 	char *str;
 	str = (char*)calloc(40, sizeof(char));
@@ -314,7 +310,7 @@ void InputSurname(PHONE *val){
 	}
 }
 
-void InputHomePhone(PHONE *val){
+void InputHomePhone(PHONE *val) {
 	int num = 0;
 	char *str;
 	str = (char*)calloc(40, sizeof(char));
@@ -357,7 +353,7 @@ void InputHomePhone(PHONE *val){
 	}
 }
 
-void InputEmail(PHONE *val){
+void InputEmail(PHONE *val) {
 	int num = 0, c = 0;
 	char *str;
 	str = (char*)calloc(30, sizeof(char));
@@ -415,7 +411,7 @@ void InputEmail(PHONE *val){
 
 }
 
-void InputCity(PHONE *val){
+void InputCity(PHONE *val) {
 	int num = 0;
 	char *str;
 	str = (char*)calloc(30, sizeof(char));
@@ -465,7 +461,7 @@ void InputCity(PHONE *val){
 	}
 }
 
-void InputSkype(PHONE *val){
+void InputSkype(PHONE *val) {
 	int num = 0;
 	char *str;
 	str = (char*)calloc(40, sizeof(char));
@@ -476,36 +472,35 @@ void InputSkype(PHONE *val){
 	printf("(Enter Skype: badmatroskin)\n\n");
 	printf("Skype: ");
 	gets(val->skype);
+	//strcpy(str, val->name);
 	str = val->skype;
 	num = strlen(str);
-	if (strlen(val->name) == 0){
+	if (strlen(val->name) == 0) {
 		printf("An empty string");
 		_getch();
 		InputSkype(val);
 	}
-	if (strlen(val->name) > 25){
+	if (strlen(val->name) > 25) {
 		printf("\t\t\tThe number of characters exceeds the limit.");
 		_getch();
 		InputSkype(val);
 	}
-	if (strcmp(str, str1) == 0){
+	if (strcmp(str, str1) == 0) {
 		system("cls");
 		menu();
 	}
-	for (int i = 0; i < num; i++){
-	if (!(str[i]<='z'&& str[i]>='a')){  //& (str[i]<48 || str[i] > 57) && (str[i]<192 || str[i]>255) && (str[i] != 95 || str[i] !=46)){
-	printf("Enter again!");
-	_getch();
-	InputSkype(val);
-	}
+	for (int i = 0; i < num; i++) {
+		if (!(str[i] <= 'z'&& str[i] >= 'a')) {  //& (str[i]<48 || str[i] > 57) && (str[i]<192 || str[i]>255) && (str[i] != 95 || str[i] !=46)){
+			printf("Enter again!");
+			_getch();
+			InputSkype(val);
+		}
 	}
 }
 
 int EditElement(Queue *queue){
 	if (isQueueEmpty(queue)){
-		Warning();
-		_getch();
-		return 1;
+		return 0;
 	}
 	outTablePhone(queue);
 	int pos;
@@ -539,7 +534,7 @@ int EditElement(Queue *queue){
 	if (saveBinFile(queue) == 0) printf("Error write!\n");
 	_getch();
 	menu();
-	return 0;
+	return 1;
 }
 
 int Edit(ELEMENT *tmp,int pos) {

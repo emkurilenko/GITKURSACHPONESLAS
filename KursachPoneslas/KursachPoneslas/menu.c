@@ -116,7 +116,14 @@ void menu(void){
 						 }
 						 case '2':
 						 {		 
-									 InsertPos(line);
+							 if (InsertPos(line) == 0) {
+								 printf("Error!");
+								 _getch();
+							 }
+							 else {
+								 printf("\t\t\tNew contact added!\n");
+								 _getch();
+							 }
 									 if (saveBinFile(line) == 0) printf("Write Error!\n");
 									 _getch();
 									 break;
@@ -131,12 +138,6 @@ void menu(void){
 					 break;
 		}
 		case '2': {		
-			if (isQueueEmpty(line))
-			{
-			Warning();
-			_getch();
-			break;
-			}
 					  int i = 0;
 					  while (!i){
 						  SearchMenu();
@@ -204,13 +205,7 @@ void menu(void){
 					 }
 		}
 		case '4':{
-				if(isQueueEmpty(line))
-				{
-					Warning();
-					_getch();
-					break;
-				}
-						int i=0;
+					int i=0;
 					 while (!i)
 					 {
 						 DelMenu();
@@ -269,7 +264,10 @@ void menu(void){
 			break;	
 		}
 		case '5':{
-					 EditElement(line);
+			if (EditElement(line) == 0) {
+				Warning();
+				_getch();
+			}
 					 break;
 		}
 		case '6':{

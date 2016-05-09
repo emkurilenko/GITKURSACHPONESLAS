@@ -31,19 +31,6 @@ int takeFromQueue(Queue *queue, ELEMENT *val) {
 	return 1;
 }
 
-void AddHead(Queue *queue, PHONE val){
-	ELEMENT *tmp = (ELEMENT*)malloc(sizeof(ELEMENT));
-	if (isQueueEmpty(queue)){
-		putToQueue(queue, val);
-	}
-	else{
-		Queue *buf = queue;
-		tmp->next = buf->head;
-		tmp->val = val;
-		queue->head = tmp;
-	}
-}
-
 int InsertPos(Queue *queue){
 	system("cls");
 	if (isQueueEmpty(queue)){
