@@ -26,80 +26,16 @@ void phoneAdd(PHONE *val){
 	id++;
 }
 
-void CopyBuf(PHONE *val, Queue *list){
-	strcpy(val->name, list->head->val.name);
-	strcpy(val->surname, list->head->val.surname);
-	val->mob_one = list->head->val.mob_one;
-	val->mob_two = list->head->val.mob_two;
-	val->mob_three = list->head->val.mob_three;
-	strcpy(val->homephone, list->head->val.homephone);
-	strcpy(val->skype, list->head->val.skype);
-	strcpy(val->city, list->head->val.city);
-	strcpy(val->email, list->head->val.email);
-}
-
-void CopyBufL(PHONE *val, Queue *list){
-	strcpy(val->name, list->tail->val.name);
-	strcpy(val->surname, list->tail->val.surname);
-	val->mob_one = list->tail->val.mob_one;
-	val->mob_two = list->tail->val.mob_two;
-	val->mob_three = list->tail->val.mob_three;
-	strcpy(val->homephone, list->tail->val.homephone);
-	strcpy(val->skype, list->tail->val.skype);
-	strcpy(val->city, list->tail->val.city);
-	strcpy(val->email, list->tail->val.email);
-}
-
-void inBuffer(Queue *queue, Queue *buf, int pos, int n){
-	for (int i = 0; i < pos; i++){
-		PHONE *val = (PHONE*)malloc(sizeof(PHONE));
-		CopyBuf(val, queue);
-		putToQueue(buf, *val);
-		if (n == 1){
-			putToQueue(queue, *val);
-		}
-		if (queue->head == queue->tail){
-			ELEMENT* tmp = queue->head;
-			queue->head = queue->tail = NULL;
-			free(tmp);
-			break;
-		}
-		ELEMENT* tmp = queue->head;
-		queue->head = queue->head->next;
-		free(tmp);
-		free(val);
-	}
-}
-
-void outBuffer(Queue* list, Queue *buf, int pos){
-	for (int i = 0; i < pos; i++){
-		PHONE *val = (PHONE*)malloc(sizeof(PHONE));
-		CopyBufL(val, buf);
-		AddHead(list, *val);
-		DelTail(buf);
-		free(val);
-	}
-}
-
-int DelTail(Queue *queue){
-	if (isQueueEmpty(queue)){
-		return 0;
-	}
-	if (queue->head == queue->tail){
-		queue->head = queue->tail = NULL;
-	}
-	else{
-		int num = id - 1;
-		Queue *buffer = (Queue*)malloc(sizeof(Queue));
-		CreateQueue(buffer);
-		inBuffer(queue, buffer, num, 1);
-		ELEMENT *delet = queue->head;
-		queue->head = queue->head->next;
-		free(delet);
-		ClearQueue(buffer);
-		free(buffer);
-	}
-	return 1;
+void CopyBuf(PHONE *val, ELEMENT *element){
+	strcpy(val->name, element->val.name);
+	strcpy(val->surname, element->val.surname);
+	val->mob_one = element->val.mob_one;
+	val->mob_two = element->val.mob_two;
+	val->mob_three = element->val.mob_three;
+	strcpy(val->homephone, element->val.homephone);
+	strcpy(val->skype, element->val.skype);
+	strcpy(val->city, element->val.city);
+	strcpy(val->email, element->val.email);
 }
 
 int DelPos(Queue *queue, int pos){
@@ -108,8 +44,9 @@ int DelPos(Queue *queue, int pos){
 	}
 	int num = id;
 	while (pos > num-1){
-		printf("Enter again!\n");
+		printf("\t\t\tEnter again!\n");
 		fflush(stdin);
+		printf("\t\t\t\t");
 		scanf("%d", &pos);
 	}
 	ELEMENT* tmp1 = queue->head;
@@ -134,35 +71,26 @@ int DelPos(Queue *queue, int pos){
 		ELEMENT *tmp = (ELEMENT*)malloc(sizeof(ELEMENT));
 		while (!isQueueEmpty(queue)){
 			takeFromQueue(queue, tmp);
-			show(tmp, count);
-			_getch();
 			if (count == pos-1) {
+				if (queue->head == queue->tail) {
+					ELEMENT *delet = queue->head;
+					queue->head = NULL;
+					queue->tail = NULL;
+					free(delet);
+					break;
+				}
 				ELEMENT *delet = queue->head;
 				queue->head = delet->next;
 				free(delet);
-				//continue;
-			}
-			if (count == id-1) {
-				ELEMENT *delet = queue->head;
-				queue->head = NULL;
-				queue->tail = NULL;
-				free(delet);
-				id--;
-			}
+			 }
 			putToQueue(bufqueue, tmp->val);
 			count++;
-			//free(tmp);
 		}
 		while (!isQueueEmpty(bufqueue)) {
-			printf(" 2221 ");
-			_getch();
 			takeFromQueue(bufqueue, tmp);
-			show(tmp, 0);
 			putToQueue(queue, tmp->val);
-			outTablePhone(queue);
-			_getch();
-			//saveBinFile(queue);
 		}
+		id--;
 		return 1;
 	}
 	
@@ -588,13 +516,33 @@ int EditElement(Queue *queue){
 		fflush(stdin);
 		scanf("%d", &pos);
 	}
-	ELEMENT *tmp;;
-	/*printf("%d", id);
-	_getch();*/
+	int count = 0;
 	Queue *bufqueue = (Queue*)malloc(sizeof(Queue));
 	CreateQueue(bufqueue);
-	inBuffer(queue, bufqueue, pos, 0);
-	tmp = queue->head;
+	ELEMENT *tmp = (ELEMENT*)malloc(sizeof(ELEMENT));
+	while (!isQueueEmpty(queue)) {
+		takeFromQueue(queue, tmp);
+		if (count == pos) {
+			Edit(tmp, count);
+		}
+		putToQueue(bufqueue, tmp->val);
+		count++;
+	}
+	while (!isQueueEmpty(bufqueue)) {
+		takeFromQueue(bufqueue, tmp);
+		putToQueue(queue, tmp->val);
+	}
+	outTablePhone(queue);
+	ClearQueue(bufqueue);
+	free(bufqueue);
+	system("pause");
+	if (saveBinFile(queue) == 0) printf("Error write!\n");
+	_getch();
+	menu();
+	return 0;
+}
+
+int Edit(ELEMENT *tmp,int pos) {
 	system("cls");
 	printf("\n");
 	printf("+===+==========+=============+==============+=============+=============+===========================+===============+\n");
@@ -604,83 +552,72 @@ int EditElement(Queue *queue){
 	printf("+===+==========+=============+==============+=============+=============+===========================+===============+\n");
 	printf("\n\n");
 	EditMenu();
-	switch (_getch()){
-	case '1':{
-				 fflush(stdin);
-				 InputName(&tmp->val);
-				 break;
-	}
-	case '2':{
-				 fflush(stdin);
-				 InputSurname(&tmp->val);
-				 break;
-	}
-	case '3':{
-				 fflush(stdin);
-				 InputPhone(&tmp->val);
-				 break;
-	}
-	case '4':{
-				 fflush(stdin);
-				 InputHomePhone(&tmp->val);
-				 break;
-	}
-	case '5':{
-				 fflush(stdin);
-				 InputEmail(&tmp->val);
-				 break;
-	}
-	case '6':{
-				 fflush(stdin);
-				 InputSkype(&tmp->val);
-				 break;
-	}
-	case '7':{
-				 fflush(stdin);
-				 InputCity(&tmp->val);
-				 break;
-	}
-	case '0':{
-				 return 0;
-				 break;
-	}
-
+	switch (_getch()) {
+	case '1': {
+		fflush(stdin);
+		InputName(&tmp->val);
 		break;
 	}
-	queue->head = tmp;
-	outBuffer(queue, bufqueue, pos);
-	outTablePhone(queue);
-	ClearQueue(bufqueue);
-	system("pause");
-	//free(tmp);
-	//free(val);
-	int i = saveBinFile(queue);
-	if (i == 1) printf("Error write!\n");
-	_getch();
-	menu();
-	return 0;
+	case '2': {
+		fflush(stdin);
+		InputSurname(&tmp->val);
+		break;
+	}
+	case '3': {
+		fflush(stdin);
+		InputPhone(&tmp->val);
+		break;
+	}
+	case '4': {
+		fflush(stdin);
+		InputHomePhone(&tmp->val);
+		break;
+	}
+	case '5': {
+		fflush(stdin);
+		InputEmail(&tmp->val);
+		break;
+	}
+	case '6': {
+		fflush(stdin);
+		InputSkype(&tmp->val);
+		break;
+	}
+	case '7': {
+		fflush(stdin);
+		InputCity(&tmp->val);
+		break;
+	}
+	case '0': {
+		return 0;
+		break;
+	}
+
+			  break;
+	}
 }
 
-int AddArray(Queue *queue, Queue *buffer, PHONE *value){
+int AddArray(Queue *queue, PHONE *value){
 	PHONE *temp;
-	for (int i = 0; i < id; i++){
+	ELEMENT *element = (ELEMENT*)malloc(sizeof(ELEMENT));
+	int i = 0;
+	while (!isQueueEmpty(queue))
+	{
 		temp = value + i;
-		CopyBuf(temp, queue);
-		inBuffer(queue, buffer, 1, 0);
-		if (isQueueEmpty(queue)){
-			break;
-		}
-	}
+		takeFromQueue(queue, element);
+		CopyBuf(temp, element);
+		i++;
+	}	
 	return 1;
 }
 
-int OutArray(Queue *queue, Queue *buffer, PHONE *value){
+int OutArray(Queue *queue, PHONE *value){
 	PHONE *temp;
 	for (int i = 0; i < id; i++){
 		temp = value + i;
 		putToQueue(queue, *temp);
 	}
-	ClearQueue(buffer);
+	return 1;
 }
 
 void SorBuble(PHONE *phArr,int num){

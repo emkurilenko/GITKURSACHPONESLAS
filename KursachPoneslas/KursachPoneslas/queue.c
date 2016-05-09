@@ -48,13 +48,17 @@ int InsertPos(Queue *queue){
 	system("cls");
 	if (isQueueEmpty(queue)){
 		Warning();
-		return 1;
+		return 0;
 	}
 	outTablePhone(queue);
 	PHONE *val = (PHONE*)malloc(sizeof(PHONE));
 	int pos;
-	printf("\n\t\tEnter the position you want to insert (0<%d): ",id);
+	printf("\n\t\t\tIf you want retun on the \"MENU\",write -1");
+	printf("\n\t\t\tEnter the position you want to insert (0<%d): ",id);
 	scanf("%d", &pos);
+	if (pos == -1) {
+		menu();
+	}
 	while (pos > id){
 		printf("Error!Enter again \n");
 		fflush(stdin);
@@ -65,19 +69,26 @@ int InsertPos(Queue *queue){
 	if (pos == id){
 		putToQueue(queue, *val);
 	}
-	
-	if (pos == 0){
-		AddHead(queue, *val);
+	else {
+		Queue *buferqueue = (Queue*)malloc(sizeof(Queue));
+		CreateQueue(buferqueue);
+		ELEMENT tmp;
+		int count = 0;
+		while (!isQueueEmpty(queue)) {
+			takeFromQueue(queue, &tmp);
+			if (count == pos) {
+				putToQueue(buferqueue, *val);
+			}
+			putToQueue(buferqueue, tmp.val);
+			count++;
+		}
+		while (!isQueueEmpty(buferqueue)) {
+			takeFromQueue(buferqueue, &tmp);
+			putToQueue(queue, tmp.val);
+		}
 	}
-	else{
-		Queue *bufqueue = (Queue*)malloc(sizeof(Queue));
-		CreateQueue(bufqueue);
-		inBuffer(queue,bufqueue, pos,0);
-		AddHead(queue, *val);
-		outBuffer(queue,bufqueue, pos);
-	}
-	return 0;
 
+	return 1;
 }
 
 int isQueueEmpty(Queue *q){ 
@@ -86,7 +97,7 @@ int isQueueEmpty(Queue *q){
 }
 
 int ClearQueue(Queue *queue){
-	if (isQueueEmpty(queue)) return 1;
+	if (isQueueEmpty(queue)) return 0;
 	struct _ELEMENT *tmp, *t;
 	tmp = queue->head;
 	while (tmp->next != NULL){
@@ -96,6 +107,6 @@ int ClearQueue(Queue *queue){
 	}
 	queue->head = NULL;
 	queue->tail = NULL;
-	return 0;
+	return 1;
 }
 

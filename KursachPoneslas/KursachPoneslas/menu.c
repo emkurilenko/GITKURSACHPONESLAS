@@ -36,8 +36,7 @@ void AddMenu(void){
 		puts("");
 	printf("\t\t\t\t =================ADDITIONAL MENU=================           \n\n\n");
 	printf("\t\t\t\t\t\t1.To end\n");
-	printf("\t\t\t\t\t\t2.To start\n");
-	printf("\t\t\t\t\t\t3.To position\n");
+	printf("\t\t\t\t\t\t2.To position\n");
 	printf("\t\t\t\t\t\t0.Back to menu\n");
 }
 void DelMenu(void){
@@ -115,20 +114,10 @@ void menu(void){
 									  _getch();
 									   break;
 						 }
-						 case '2':{
-									  phoneAdd(val);
-									  AddHead(line, *val);
-									  printf("\t\t\tNew contact added!\n");
-									  int i = saveBinFile(line);
-									  if (i ==0) printf("Write Error!\n");
-									  _getch();
-									  break;
-						 }
-						 case '3':
+						 case '2':
 						 {		 
 									 InsertPos(line);
-									 int i = saveBinFile(line);
-									 if (i == 0) printf("Write Error!\n");
+									 if (saveBinFile(line) == 0) printf("Write Error!\n");
 									 _getch();
 									 break;
 						 }
@@ -141,7 +130,13 @@ void menu(void){
 					 }
 					 break;
 		}
-		case '2': {			 
+		case '2': {		
+			if (isQueueEmpty(line))
+			{
+			Warning();
+			_getch();
+			break;
+			}
 					  int i = 0;
 					  while (!i){
 						  SearchMenu();
@@ -209,6 +204,12 @@ void menu(void){
 					 }
 		}
 		case '4':{
+				if(isQueueEmpty(line))
+				{
+					Warning();
+					_getch();
+					break;
+				}
 						int i=0;
 					 while (!i)
 					 {
@@ -216,16 +217,28 @@ void menu(void){
 						 switch (_getch())
 						 {
 						 case '1': {
-									int tm=ClearQueue(line);
-									id = 0;
-									saveBinFile(line);
-									if (tm == 1){
-										Warning();
-										system("pause");
-									}
-										else
-								printf("\n\n\t\t\tDatabase is clean!\n");		
-									 break;
+							 char tm[5];
+							 printf("Are you shure?(Y\\N)  ");
+							 gets(tm);
+							 while ((strcmp(tm, "Y") != 0) && (strcmp(tm, "N") != 0))
+							 {
+								 printf("Enter again! ");
+								 _getch();
+								 fflush(stdin);
+								 gets(tm);
+							 }
+							 if (strcmp(tm, "Y")==0) {
+								 if (ClearQueue(line) == 0) {
+									 Warning();
+									 _getch();
+								 }
+								 else
+									 printf("\n\n\t\t\tDatabase is clean!\n");
+								 _getch();
+								 saveBinFile(line);
+							 }
+							
+							 	 break;
 						 }
 						 case '2':{
 									  outTablePhone(line);
@@ -275,68 +288,62 @@ void menu(void){
 							 _getch();
 							 exit(1);
 						 }
-						 Queue *buffer = (Queue*)malloc(sizeof(Queue));
-						 if (!buffer){
-							 printf("Please restart program");
-							 _getch();
-							 exit(1);
-						 }
-						 CreateQueue(buffer);
+
 						 fflush(stdin);
 						 switch (_getch())
 						 {
 						 case '1':{
-									  if (AddArray(line, buffer, phoneArray) == 0){
+									  if (AddArray(line, phoneArray) == 0){
 										  Warning();
 										  _getch();
 										  i = 1;
 									  }
 									  SorBuble(phoneArray,1);
-									  OutArray(line, buffer, phoneArray);
+									  OutArray(line, phoneArray);
 									  saveBinFile(line);
 									  break;
 						 }
 						 case '2':{
-									  if (AddArray(line, buffer, phoneArray) == 0){
+									  if (AddArray(line, phoneArray) == 0){
 										  Warning();
 										  _getch();
 										  i = 1;
 									  }
 									  SorBuble(phoneArray, 2);
-									  OutArray(line, buffer, phoneArray);
+									  OutArray(line,  phoneArray);
 									  saveBinFile(line);
 									  break;
 						 }
 						 case '3':{
-									  if (AddArray(line, buffer, phoneArray) == 0){
+									  if (AddArray(line,  phoneArray) == 0){
 										  Warning();
 										  _getch();
 										  i = 1;
 									  }
 									  SorBuble(phoneArray, 3);
-									  OutArray(line, buffer, phoneArray);
+									  OutArray(line,  phoneArray);
 									  saveBinFile(line);
 									  break;
 						 }
 						 case '4':{
-									  if (AddArray(line, buffer, phoneArray) == 0){
+									  if (AddArray(line,  phoneArray) == 0){
 										  Warning();
 										  _getch();
 										  i = 1;
 									  }
 									  SorBuble(phoneArray, 3);
-									  OutArray(line, buffer, phoneArray);
+									  OutArray(line, phoneArray);
 									  saveBinFile(line);
 									  break;
 						 }
 						 case '5':{
-									  if (AddArray(line, buffer, phoneArray) == 0){
+									  if (AddArray(line, phoneArray) == 0){
 										  Warning();
 										  _getch();
 										  i = 1;
 									  }
 									  SortBublePhone(phoneArray);
-									  OutArray(line, buffer, phoneArray);
+									  OutArray(line, phoneArray);
 									  saveBinFile(line);
 									  break;
 

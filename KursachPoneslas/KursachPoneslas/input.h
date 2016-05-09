@@ -7,7 +7,7 @@
 void phoneAdd(PHONE *list); //Ввод 
 int search(Queue *,int); //поиск 
 void outTablePhone(Queue *temp); //вывод всего справочника
-void CopyBuf(PHONE *val, Queue *list);//Копирование полей
+void CopyBuf(PHONE *val, ELEMENT *element);//Копирование полей
 void InputPhone(PHONE *newPhone);
 void InputName(PHONE*);
 void InputSurname(PHONE *);
@@ -17,15 +17,12 @@ void InputCity(PHONE *);
 void InputSkype(PHONE *);
 void show(ELEMENT *tmp,int i);//вывод элемента
 int EditElement(Queue*); //Изменение элемента
+int Edit(ELEMENT *,int pos);
 
-void CopyBufL(PHONE *val, Queue *list);
-void inBuffer(Queue *list,Queue *buf, int pos,int n);//Ввод в буфер
-void outBuffer(Queue *,Queue *, int);//Вывод из буфера
 int DelPos(Queue *,int);//Удаление по позиции
-int DelTail(Queue *);//Удаление последнего элемента
 
-int AddArray(Queue *queue, Queue *buffer, PHONE *value);
-int OutArray(Queue *queue, Queue *buffer, PHONE *value);
+int AddArray(Queue *queue, PHONE *value);
+int OutArray(Queue *queue, PHONE *value);
 void SorBuble(PHONE *,int);
 void SortBublePhone(PHONE *);
 
